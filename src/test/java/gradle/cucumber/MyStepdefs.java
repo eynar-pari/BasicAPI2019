@@ -7,11 +7,23 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import factoryRequest.CustomReponse;
 import factoryRequest.FactoryRequest;
+import helpers.JsonUtil;
 import org.junit.Assert;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MyStepdefs {
 
     public static CustomReponse globalResponse;
+    public Map<String,String> globalVar=new HashMap<>();
+
+
+    @And("^I get the attribute (.*) and save on (.*)$")
+    public void iGetTheAttributeNAME_ATTRIBUTEAndSaveOnNAME_VAR(String attribute,String nameVar) throws Throwable {
+       String valueAttribute= JsonUtil.getJsonValue(globalResponse.getJsonBody(),attribute);
+       globalVar.put(nameVar,valueAttribute);
+    }
 
     @Given("^I have a connection with Todo.Ly$")
     public void iHaveAConnectionWithTodoLy() throws Throwable {
@@ -34,4 +46,21 @@ public class MyStepdefs {
           Assert.assertTrue("El Project no fue creado",
                   globalResponse.getJsonBody().contains(nameProject) );
     }
+
+    @And("^I expected the json response body equal to$")
+    public void iExpectedTheJsonResponseBodyEqualTo(String expectedJsom) throws Throwable {
+          String actualJson= globalResponse.getJsonBody();
+          Assert.assertTrue("ERROR !!! al comparar",
+                  JsonUtil.areEqualsJsonObject(this.buildString(expectedJsom),actualJson));
+    }
+
+     private String buildString(String value){
+        for (String key: globalVar.keySet())
+           value=value.replace(key,globalVar.get(key));
+        return value;
+    }
+
+
+
+
 }
