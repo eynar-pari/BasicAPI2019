@@ -1,6 +1,7 @@
 package gradle.cucumber;
 
 import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -26,5 +27,11 @@ public class MyStepdefs {
     @Then("^the response code should be (\\d+)$")
     public void theResponseCodeShouldBe(int expected) throws Throwable {
         Assert.assertEquals("The expected is not equal to the actual",expected,globalResponse.getCodeStatus());
+    }
+
+    @And("^I expected the json response body contains (.*)$")
+    public void iExpectedTheJsonResponseBodyContainsNAME(String nameProject) throws Throwable {
+          Assert.assertTrue("El Project no fue creado",
+                  globalResponse.getJsonBody().contains(nameProject) );
     }
 }

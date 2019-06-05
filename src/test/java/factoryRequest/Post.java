@@ -14,12 +14,16 @@ public class Post implements IRequest{
     public CustomReponse send(String path, String body) {
         Response response_actual;
         WebTarget target = client.target(SERVER_MAIN_URL + path);
+        System.out.println("\nINFO>\t Request URL :"+SERVER_MAIN_URL + path);
+        System.out.println("\nINFO>\t Requet BODY :"+body);
         Entity entity = Entity.json(body);
         response_actual = target.request(MediaType.APPLICATION_JSON_TYPE).header(Authentication, Authentication_value).post(entity);
         CustomReponse response = new CustomReponse(response_actual.readEntity(String.class).toString(),
                 response_actual.getStatus(),
                 response_actual.getStatusInfo().toString());
         response_actual.close();
+        System.out.println("\nINFO>\t Response BODY :"+response.getJsonBody());
+        System.out.println("\nINFO>\t Response CODE :"+response.getCodeStatus());
         return response;
     }
 }
