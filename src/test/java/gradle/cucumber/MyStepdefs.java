@@ -22,6 +22,7 @@ public class MyStepdefs {
     @And("^I get the attribute (.*) and save on (.*)$")
     public void iGetTheAttributeNAME_ATTRIBUTEAndSaveOnNAME_VAR(String attribute,String nameVar) throws Throwable {
        String valueAttribute= JsonUtil.getJsonValue(globalResponse.getJsonBody(),attribute);
+       System.out.println("\nINFO>\t glovalVar : ["+nameVar+"] has value : ["+valueAttribute+"]");
        globalVar.put(nameVar,valueAttribute);
     }
 
@@ -31,9 +32,10 @@ public class MyStepdefs {
 
     }
 
-    @When("^I send a (POST) request to (projects.json) end point with the json$")
+    @When("^I send a (POST|PUT|DELETE|GET) request to (projects.json) end point with the json$")
     public void iSendAPOSTRequestToProjectsJsonEndPointWithTheJson(String method, String path, String body) throws Throwable {
-        globalResponse=FactoryRequest.make(FactoryRequest.POST).send(path,body);
+        globalResponse=FactoryRequest.make(method.toLowerCase())
+                .send(buildString(path),buildString(body));
     }
 
     @Then("^the response code should be (\\d+)$")
